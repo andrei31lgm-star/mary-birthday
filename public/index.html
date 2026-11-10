@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Happy Birthday, Mary!</title>
+<meta name="description" content="A little birthday surprise for Mary.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#fff6ea; --ink:#2b1a24; --rose:#e2557a; --peach:#f7a072; --gold:#f2c14e; --plum:#6b2d5c;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:"Fraunces",Georgia,serif; color:var(--ink); background:var(--cream);
+    background-image:
+      radial-gradient(circle at 15% 20%, #ffd9c7 0, transparent 40%),
+      radial-gradient(circle at 85% 80%, #ffe3ec 0, transparent 45%),
+      radial-gradient(circle at 80% 10%, #fff0c2 0, transparent 35%);
+    min-height:100vh; overflow-x:hidden; display:flex; flex-direction:column; align-items:center;
+  }
+  canvas#confetti{position:fixed;inset:0;pointer-events:none;z-index:5}
+  header{text-align:center;padding:9vh 1.5rem 2rem;position:relative;z-index:2}
+  .kicker{font-family:"Caveat",cursive;font-size:clamp(1.6rem,4vw,2.4rem);color:var(--plum);transform:rotate(-3deg);display:inline-block}
+  h1{
+    font-weight:900;font-size:clamp(3.4rem,13vw,9.5rem);line-height:.9;letter-spacing:-.03em;
+    font-variation-settings:"opsz" 144;
+  }
+  h1 .name{display:block;font-style:italic;font-weight:400;color:var(--rose)}
+  h1 .name span{display:inline-block;animation:bob 2.6s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-.08em)}}
+
+  .cake-wrap{position:relative;z-index:2;margin:1rem 0 1.5rem;text-align:center}
+  .cake{position:relative;width:240px;height:200px;margin:0 auto;cursor:pointer}
+  .layer{position:absolute;left:50%;transform:translateX(-50%);border-radius:14px}
+  .l1{bottom:0;width:240px;height:80px;background:var(--plum)}
+  .l2{bottom:70px;width:190px;height:70px;background:var(--rose)}
+  .l1::after,.l2::after{content:"";position:absolute;top:-6px;left:0;right:0;height:20px;border-radius:14px;
+    background:repeating-radial-gradient(circle at 10px 0,var(--cream) 0 10px,transparent 10px 20px);background-size:20px 20px}
+  .candles{position:absolute;bottom:140px;left:50%;transform:translateX(-50%);display:flex;gap:22px}
+  .candle{width:12px;height:46px;border-radius:3px;position:relative;
+    background:repeating-linear-gradient(45deg,var(--gold) 0 6px,#fff 6px 12px)}
+  .flame{position:absolute;left:50%;bottom:44px;width:14px;height:22px;transform:translateX(-50%);
+    background:radial-gradient(circle at 50% 70%,#fff 0 20%,var(--gold) 40%,var(--peach) 70%,transparent 72%);
+    border-radius:50% 50% 50% 50%/60% 60% 40% 40%;animation:flicker .18s infinite alternate;transform-origin:bottom center;transition:opacity .4s}
+  @keyframes flicker{from{transform:translateX(-50%) scale(1) rotate(-2deg)}to{transform:translateX(-50%) scale(1.08,.94) rotate(2deg)}}
+  .out .flame{opacity:0}
+  .smoke{position:absolute;left:50%;bottom:50px;width:6px;height:6px;border-radius:50%;background:#bbb;opacity:0}
+  .out .smoke{animation:smoke 1.4s ease-out forwards}
+  @keyframes smoke{0%{opacity:.7;transform:translate(-50%,0) scale(1)}100%{opacity:0;transform:translate(-30%,-60px) scale(4)}}
+  .hint{font-family:"Caveat",cursive;font-size:1.6rem;color:var(--plum);margin-top:.8rem}
+
+  .letter{
+    position:relative;z-index:2;max-width:620px;margin:1rem 1.5rem 3rem;padding:2.5rem 2.25rem;
+    background:#fff;border-radius:6px;box-shadow:0 1px 0 #0001,0 20px 50px -20px #6b2d5c55;
+    transform:rotate(-1deg);
+  }
+  .letter::before{content:"";position:absolute;top:-14px;left:50%;width:110px;height:28px;transform:translateX(-50%) rotate(2deg);
+    background:#f2c14e99}
+  .letter h2{font-weight:700;font-size:1.8rem;margin-bottom:1rem}
+  .letter p{font-size:1.15rem;line-height:1.7;margin-bottom:1rem}
+  .letter .sign{font-family:"Caveat",cursive;font-size:2rem;color:var(--rose);text-align:right;margin:0}
+
+  .wishes{position:relative;z-index:2;display:flex;flex-wrap:wrap;justify-content:center;gap:.75rem;max-width:760px;padding:0 1.5rem 4rem}
+  .wishes button{
+    font:inherit;font-size:1rem;border:2px solid var(--ink);background:var(--cream);color:var(--ink);
+    padding:.6rem 1.1rem;border-radius:999px;cursor:pointer;transition:transform .15s,background .15s
+  }
+  .wishes button:hover{transform:translateY(-2px) rotate(-1deg);background:var(--gold)}
+  #wish{min-height:2.5rem;font-family:"Caveat",cursive;font-size:2rem;color:var(--plum);text-align:center;padding:0 1.5rem;position:relative;z-index:2}
+  footer{margin-top:auto;padding:2rem;font-size:.9rem;opacity:.6;position:relative;z-index:2}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<header>
+  <span class="kicker">today is all about you</span>
+  <h1>Happy Birthday,<span class="name" id="name">Mary!</span></h1>
+</header>
+
+<section class="cake-wrap">
+  <div class="cake" id="cake" role="button" tabindex="0" aria-label="Blow out the candles">
+    <div class="candles">
+      <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
+      <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
+      <div class="candle"><div class="flame"></div><div class="smoke"></div></div>
+    </div>
+    <div class="layer l2"></div>
+    <div class="layer l1"></div>
+  </div>
+  <p class="hint" id="hint">make a wish &amp; tap the cake to blow out the candles</p>
+</section>
+
+<article class="letter">
+  <h2>Dear Mary,</h2>
+  <p>Another trip around the sun, and you make every bit of it brighter. Thank you for the laughter, the kindness, and for being exactly who you are.</p>
+  <p>I hope this year brings you big adventures, small joys, cake for breakfast, and everything you've been wishing for.</p>
+  <p class="sign">With love ♥</p>
+</article>
+
+<div id="wish" aria-live="polite"></div>
+<section class="wishes" aria-label="Birthday wishes">
+  <button data-w="May your coffee always be hot 🍵">a cozy wish</button>
+  <button data-w="May this be your best year yet ✨">a big wish</button>
+  <button data-w="May you laugh until your cheeks hurt 😄">a silly wish</button>
+  <button data-w="May every dream find its way to you 🌙">a dreamy wish</button>
+</section>
+
+<footer>made with love for Mary</footer>
+
+<script>
+  // bouncing letters in the name
+  const n=document.getElementById('name');
+  n.innerHTML=[...n.textContent].map((c,i)=>`<span style="animation-delay:${i*.12}s">${c}</span>`).join('');
+
+  // confetti
+  const cv=document.getElementById('confetti'),ctx=cv.getContext('2d');let P=[];
+  const colors=['#e2557a','#f7a072','#f2c14e','#6b2d5c','#7cc6b4'];
+  const size=()=>{cv.width=innerWidth*devicePixelRatio;cv.height=innerHeight*devicePixelRatio;ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0)};
+  size();addEventListener('resize',size);
+  function burst(n=160,x=innerWidth/2,y=innerHeight/3){
+    for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,s=4+Math.random()*9;
+      P.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-6,r:4+Math.random()*6,c:colors[i%colors.length],rot:Math.random()*6,vr:(Math.random()-.5)*.3,life:220})}
+  }
+  (function tick(){ctx.clearRect(0,0,innerWidth,innerHeight);
+    P=P.filter(p=>p.life-->0&&p.y<innerHeight+20);
+    for(const p of P){p.vy+=.22;p.vx*=.99;p.x+=p.vx;p.y+=p.vy;p.rot+=p.vr;
+      ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.fillStyle=p.c;ctx.fillRect(-p.r/2,-p.r/4,p.r,p.r/2);ctx.restore()}
+    requestAnimationFrame(tick)})();
+  if(!matchMedia('(prefers-reduced-motion: reduce)').matches) setTimeout(()=>burst(),400);
+
+  // candles
+  const cake=document.getElementById('cake'),hint=document.getElementById('hint');
+  function blow(){
+    if(cake.classList.contains('out')){cake.classList.remove('out');hint.textContent='make another wish & tap again';return}
+    cake.classList.add('out');hint.textContent='🎉 your wish is on its way! (tap to relight)';
+    const r=cake.getBoundingClientRect();burst(220,r.left+r.width/2,r.top);
+  }
+  cake.addEventListener('click',blow);
+  cake.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();blow()}});
+
+  // wishes
+  document.querySelectorAll('.wishes button').forEach(b=>b.addEventListener('click',e=>{
+    document.getElementById('wish').textContent=b.dataset.w;burst(60,e.clientX,e.clientY);
+  }));
+</script>
+</body>
+</html>
